@@ -16,7 +16,7 @@ setupSearcher(".search.form", (sectionDiv) => {
         .then(data => {
             console.log("AJAX request finished correctly :)");
             console.log(data);
-            const result = generateList(data);
+            const result = generateList(data, searchTerm);
             displayResult(sectionDiv, result);
         })
         .catch(error => {
@@ -27,13 +27,12 @@ setupSearcher(".search.form", (sectionDiv) => {
 });
 
 
-function generateList(data) {
-    console.log(data);
+function generateList(data, searchTerm) {
+
     let html = "Found " + data.total_count +" repositories about " + searchTerm;
 
-    for( let i = 0; i < data.length; i++) {
-        let item = data[i];
-        console.log(item);
+    for( let i = 0; i < data.items.length; i++) {
+        let item = data.items[i];
         html += "<li>" + generateListElement(item) + "</li>";
     }
 
@@ -42,7 +41,7 @@ function generateList(data) {
 
 
 function generateListElement(data) {
-    return data.name + " - from user: " + data.owner.login
+    return "<a href='"+ data.html_url +"'>" + data.name + "</a> - from user: <a href='"+ data.owner.html_url +"'>" + data.owner.login + "</a>"
 }
 
 
@@ -65,6 +64,6 @@ function setupSearcher(classSelector, sectionExample) {
 
 /** Sets the resultText in an element with class "result" inside the sectionElement */
 function displayResult(sectionElement, resultText) {
-    console.log(resultText);
-    sectionElement.querySelector(".result").textContent = resultText;
+    //console.log(resultText);
+    sectionElement.querySelector(".result").innerHTML = resultText;
 }
